@@ -7,8 +7,13 @@ import java.util.List;
  * @author Merlin
  * #46.全排列：给定一个没有重复数字的序列，返回其所有可能的全排列。
  */
-public class Solution {
+public class SolutionA {
 	public List<List<Integer>> permute(int[] nums) {
+		
+		/*
+		 * 2020-02-16:我的解法，未通过，仅输出原数组，并未实现排列组合
+		 */
+		
         // 回溯算法实现，关键在于先在某位置插入一个数值，之后一定会回溯到
         // 此位置并选择其它值，直至尝试完所有值
         List<List<Integer>> result = new ArrayList<List<Integer>>();
