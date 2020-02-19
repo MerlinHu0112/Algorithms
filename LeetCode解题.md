@@ -908,7 +908,7 @@ public int removeDuplicates(int[] nums) {
 
 
 
-### 6. 查找树
+### 6. 树
 
 ##### 538 & 1038 将二叉搜索树转变为累加数
 
@@ -944,6 +944,8 @@ private void traverseAndUpdate(TreeNode root){
 
 - 时间复杂度：O(n)
 - 空间复杂度：O(n)，压栈时的空间开销
+
+
 
 
 
@@ -1293,6 +1295,15 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 - 时间复杂度：O(n)
 - 空间复杂度：O(n)
 
+==与 DFS / BFS 相关的LeetCode题目==
+
+- 101、判断一个二叉树是否是镜像对称的【递归（DFS）+迭代（BFS）】
+- 108、将有序数组转换成平衡二叉树【DFS】
+
+
+
+
+
 
 
 ### 11. 回溯算法【难点题，须反复揣摩】
@@ -1489,7 +1500,7 @@ private void backtrack(String S, int curr, List<String> list, char[] array){
 
 
 
-### 11. 二分法
+### 12. 二分法
 
 ##### 33. 搜索旋转排序数组
 
