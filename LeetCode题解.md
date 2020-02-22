@@ -985,6 +985,37 @@ public int removeDuplicates(int[] nums) {
 
 
 
+##### 283. 移动零
+
+题目：给定一个数组 `nums`，编写一个函数将所有 `0` 移动到数组的末尾，同时保持非零元素的相对顺序。要求原地操作。
+
+```java
+public void moveZeroes(int[] nums) {
+    // 快慢指针：慢指针指向待替换的位置，快指针向后寻找第一个
+    // 不为零的元素，将该元素填入慢指针位置。
+
+    if(nums==null || nums.length==0){
+        return;
+    }
+
+    int slow = 0;
+    // 下述循环算法的特点在于：可保持fast和slow指针同步移动，
+    // 直到同时遇见首个零元素或遍历完数组。在遇见首个零元素的
+    // 情况下，fast指针可较slow指针先移动，并完成覆盖零元素的操作。
+    for(int fast=0; fast<nums.length; fast++){
+        if(nums[fast]!=0){
+            nums[slow++] = nums[fast];
+        }
+    }
+
+    while(slow < nums.length){
+        nums[slow++] = 0;
+    }
+}
+```
+
+
+
 
 
 
