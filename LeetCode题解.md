@@ -1131,6 +1131,53 @@ public int hammingWeight(int n) {
 
 
 
+##### 268. 缺失数组【异或运算】
+
+题目：给定一个包含 `0, 1, 2, ..., n` 中 *n* 个数的序列，找出 0 .. *n* 中没有出现在序列中的那个数。
+
+**重点知识：**
+
+- 异或运算满足交换律
+- 同一个数对自己做异或，结果为0
+
+```java
+// 位运算方法
+public int missingNumber(int[] nums) {
+    int target = nums.length; // 目标值先设为n
+    for(int i=0; i<nums.length; i++){
+        target ^= (i ^ nums[i]);
+    }
+    return target;
+}
+```
+
+```java
+// 数学方法
+public int missingNumber(int[] nums) {
+    // 根据题意，相当于从[0, n]区间内取走一个值。
+    // 显然，区间[0, n]内所有元素的和，减去数组nums的元素和，即为取走的值。
+    // 显然，n = nums.length
+    int numsTotal = 0;
+    for(int i=0; i<nums.length; i++){
+        numsTotal += nums[i];
+    }
+    return ((((nums.length)*(nums.length+1))>>1)-numsTotal);
+}
+```
+
+**关于位运算中第5行语句**
+
+假设目标数组为{0, 1, 3, 4}，n = 4，缺失为2。循环语句执行效果如下：
+
+```
+n = 4∧(0∧0)∧(1∧1)∧(2∧3)∧(3∧4) // nums中元素索引与值作异或
+  = (4∧4)∧(0∧0)∧(1∧1)∧(3∧3)∧2 // 交换律
+  = 0∧0∧0∧0∧2
+  = 2		
+```
+
+
+
 ##### 371. 通过位运算计算两整数之和
 
 首先看十进制是如何做的： 5+7=12，三步走：
