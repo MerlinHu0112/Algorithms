@@ -1,4 +1,88 @@
-### 1. 排序
+###   1. 排序
+
+##### 56. 合并区间
+
+题目要求：合并给定的区间集合中重合的区间
+
+我的思路：设置两个指针，内外循环，两两比较区间，若重合，则同时更新两个区间左右区间值。循环完毕，重复的区间值仅取一个即可。
+
+我的解答：（测试用例通过，提交未通过）
+
+```java
+// 将p指向的区间与其后每一个区间逐一比较，若重复，则同时更新p、q所指区间值
+for(int p=0; p<intervals.length-1; p++) { // p指针，外循环
+    for(int q=p+1; q<intervals.length; q++) { // q指针，内循环
+        if(intervals[p][0]<=intervals[q][0] && intervals[q][0]<=intervals[p][1]) {
+            if(intervals[p][1]<=intervals[q][1]) {
+                intervals[p][1]=intervals[q][1];
+                intervals[q][0]=intervals[p][0];
+            }else {
+                intervals[q][0]=intervals[p][0];
+                intervals[q][1]=intervals[p][1];
+            }
+        }else if(intervals[p][0] > intervals[q][0] && intervals[p][0]<=intervals[q][1]){
+            if(intervals[p][1]<=intervals[q][1]) {
+                intervals[p][0]=intervals[q][0];
+                intervals[p][1]=intervals[q][1];
+            }else {
+                intervals[p][0]=intervals[q][0];
+                intervals[q][1]=intervals[p][1];
+            }
+        }
+    }
+}
+```
+
+**参考解答：**
+
+```java
+/*
+ *思路：
+ * 1、先对所有区间按照左端点值升序排序；
+ * 2、一次遍历，将第一个区间插入merged数组中，然后按顺序考虑之后的每个区间；
+ * 3、若当前区间的左端点大于前一个区间的右端点，则区间不重合，直接插入当前区间；
+ * 4、若当前区间的左端点小于前一个区间的右端点，则区间重合，取较大的右端点更新重合区间的右端点。
+ */
+public int[][] merge(int[][] intervals){
+
+    List<int[]> res = new ArrayList<>();
+
+    /*
+	 *	根据重写的比较器Comparator，实现对区间集合按照左端点值升序排序
+	 *	sort()方法底层采用归并排序，时间复杂度为：O(n log n)
+	 */
+    Arrays.sort(intervals, new Comparator<int[]>(){
+        @Override
+        public int compare(int[] a, int[] b) {
+            return a[0]-b[0]; // 比较两个区间的左端点值
+        }
+    });
+
+    /*
+	 *	对区间集合进行遍历，仅需一次
+	 */
+    int i = 0;
+    while(i < intervals.length) {
+        int left = intervals[i][0];
+        int right = intervals[i][1];
+        // 遍历，比较下一个区间的左端点值和当前区间i的右端点值
+        while(i < intervals.length-1 && right > intervals[i+1][0]) {
+            // i+1区间的左端点值小于i区间的右端点值，区间重合
+            right = Math.max(right, intervals[++i][1]); // 取i和i+1区间右端点的较大者
+        }
+        res.add(new int[] {left, right}); // 向结果集中插入独立的区间
+        i++;
+    }
+    return res.toArray(new int[0][]);
+}
+```
+
+总结：
+
+- 时间复杂度：算法的性能主要消耗在排序时，由于采用归并排序，则 O( n log n)
+- 空间复杂度：O（n）
+
+
 
 ##### 75. 颜色分类（ 荷兰国旗问题 ）
 
@@ -129,7 +213,6 @@ public class PancakeSort {
 
 - 若数组初始逆序，如何确保一次翻转即可完成？
 
-  
 
 参考算法：
 
@@ -228,146 +311,73 @@ public class kClosest {
 - 时间复杂度 O ( n log n )
 - 空间复杂度 O ( n )
 
-
-
-##### 56. 合并区间
-
-题目要求：合并给定的区间集合中重合的区间
-
-我的思路：设置两个指针，内外循环，两两比较区间，若重合，则同时更新两个区间左右区间值。循环完毕，重复的区间值仅取一个即可。
-
-我的解答：（测试用例通过，提交未通过）
-
-```java
-// 将p指向的区间与其后每一个区间逐一比较，若重复，则同时更新p、q所指区间值
-for(int p=0; p<intervals.length-1; p++) { // p指针，外循环
-    for(int q=p+1; q<intervals.length; q++) { // q指针，内循环
-        if(intervals[p][0]<=intervals[q][0] && intervals[q][0]<=intervals[p][1]) {
-            if(intervals[p][1]<=intervals[q][1]) {
-                intervals[p][1]=intervals[q][1];
-                intervals[q][0]=intervals[p][0];
-            }else {
-                intervals[q][0]=intervals[p][0];
-                intervals[q][1]=intervals[p][1];
-            }
-        }else if(intervals[p][0] > intervals[q][0] && intervals[p][0]<=intervals[q][1]){
-            if(intervals[p][1]<=intervals[q][1]) {
-                intervals[p][0]=intervals[q][0];
-                intervals[p][1]=intervals[q][1];
-            }else {
-                intervals[p][0]=intervals[q][0];
-                intervals[q][1]=intervals[p][1];
-            }
-        }
-    }
-}
-```
-
-**参考解答：**
-
-```java
-/*
- *思路：
- * 1、先对所有区间按照左端点值升序排序；
- * 2、一次遍历，将第一个区间插入merged数组中，然后按顺序考虑之后的每个区间；
- * 3、若当前区间的左端点大于前一个区间的右端点，则区间不重合，直接插入当前区间；
- * 4、若当前区间的左端点小于前一个区间的右端点，则区间重合，取较大的右端点更新重合区间的右端点。
- */
-public int[][] merge(int[][] intervals){
-
-    List<int[]> res = new ArrayList<>();
-
-    /*
-	 *	根据重写的比较器Comparator，实现对区间集合按照左端点值升序排序
-	 *	sort()方法底层采用归并排序，时间复杂度为：O(n log n)
-	 */
-    Arrays.sort(intervals, new Comparator<int[]>(){
-        @Override
-        public int compare(int[] a, int[] b) {
-            return a[0]-b[0]; // 比较两个区间的左端点值
-        }
-    });
-
-    /*
-	 *	对区间集合进行遍历，仅需一次
-	 */
-    int i = 0;
-    while(i < intervals.length) {
-        int left = intervals[i][0];
-        int right = intervals[i][1];
-        // 遍历，比较下一个区间的左端点值和当前区间i的右端点值
-        while(i < intervals.length-1 && right > intervals[i+1][0]) {
-            // i+1区间的左端点值小于i区间的右端点值，区间重合
-            right = Math.max(right, intervals[++i][1]); // 取i和i+1区间右端点的较大者
-        }
-        res.add(new int[] {left, right}); // 向结果集中插入独立的区间
-        i++;
-    }
-    return res.toArray(new int[0][]);
-}
-```
-
-总结：
-
-- 时间复杂度：算法的性能主要消耗在排序时，由于采用归并排序，则 O( n log n)
-- 空间复杂度：O（n）
-
-
-
-
-
-
+---
 
 ### 2. 递归
 
-##### 938. 二叉搜索树的范围和
+##### 509. 斐波那契数列
 
-题目要求：给定L和R，返回二叉搜索树中元素值位于L和R之间（包括L和R）的所有结点的值的和
+题目：斐波那契数列，同解的算法有：兔子繁殖、青蛙爬楼梯。
 
-我的思路：
+> 解法多达六种，在此仅介绍有代表性的三种
 
-- 中序遍历二叉树，即实现按照值升序遍历二叉树；
-- 为减少左子树不必要的递归，在递归时设置条件，只有当前结点值大于L时，才能递归进入左子树；
-- 同样设置条件，避免右子树不必要的递归。
-
-我的解答：（通过）
+1、递归解法
 
 ```java
-package LeetCode.Recursion;
-public class RangeSumBST {
-    
-    private int sum = 0; // 用于保存结果
-	
-	public int rangeSumBST(TreeNode root, int L, int R) {
-		
-        if(root==null) {
-        	return 0;
-        }
-        
-        if(root.left!=null && root.val > L) {
-        	 // 左子结点不为空，且父结点值大于L时，方可递归进入下一层
-        	rangeSumBST(root.left, L, R);
-        }
-        
-        if(root.val>=L && root.val<=R){
-            sum += root.val;
-        }
-        
-        if(root.right!=null && root.val < R) {
-        	// 右子结点不为空，且父结点值小于R时，方可递归进入下一层
-        	rangeSumBST(root.right, L, R);
-        }
-        
-        return sum;
+public int fib(int N) {
+    if(N<=1){
+        return N;
     }
+    return fib(N-1) + fib(N-2);
 }
 ```
 
+算法分析
 
+- 时间复杂度：O(2^N)，在所有的算法中，性能最差！
+- 空间复杂度：O(N)，可能会存在栈溢出风险！
 
+2、带记忆的自底向上的方法
 
+```java
+public int fib(int N) {
+    // 自底向上+记忆：利用数组，缓存已计算的值
+    if(N<=1){
+        return N;
+    }
+    return computeAndCache(N);
+}
 
+private int computeAndCache(int N){
+    int[] aux = new int[N+1]; // 0~N，N+1个数
+    aux[1] = 1; // aux[0]初始化即为0
+    for(int i=2;i<=N;i++){
+        aux[i] = aux[i-2]+aux[i-1];
+    }
+    return aux[N];
+}
+```
 
+算法分析
+
+- 时间复杂度：O(N)
+- 空间复杂度：O(N)
+
+3、Binet公式
+
+```java
+public int fib(int N) {
+    double goldenRatio = (1 + Math.sqrt(5)) / 2;
+    return (int)Math.round(Math.pow(goldenRatio, N)/ Math.sqrt(5));
+}
+```
+
+算法分析
+
+- 时间复杂度：O(1)
+- 空间复杂度：O(1)
+
+---
 
 ### 3. 数组
 
@@ -554,70 +564,6 @@ public int numPairsDivisibleBy60(int[] time) {
 
 
 
-##### 509. 斐波那契数列
-
-题目：斐波那契数列，同解的算法有：兔子繁殖、青蛙爬楼梯。
-
-> 解法多达六种，在此仅介绍有代表性的三种
-
-1、递归解法
-
-```java
-public int fib(int N) {
-    if(N<=1){
-        return N;
-    }
-    return fib(N-1) + fib(N-2);
-}
-```
-
-算法分析
-
-- 时间复杂度：O(2^N)，在所有的算法中，性能最差！
-- 空间复杂度：O(N)，可能会存在栈溢出风险！
-
-2、带记忆的自底向上的方法
-
-```java
-public int fib(int N) {
-    // 自底向上+记忆：利用数组，缓存已计算的值
-    if(N<=1){
-        return N;
-    }
-    return computeAndCache(N);
-}
-
-private int computeAndCache(int N){
-    int[] aux = new int[N+1]; // 0~N，N+1个数
-    aux[1] = 1; // aux[0]初始化即为0
-    for(int i=2;i<=N;i++){
-        aux[i] = aux[i-2]+aux[i-1];
-    }
-    return aux[N];
-}
-```
-
-算法分析
-
-- 时间复杂度：O(N)
-- 空间复杂度：O(N)
-
-3、Binet公式
-
-```java
-public int fib(int N) {
-    double goldenRatio = (1 + Math.sqrt(5)) / 2;
-    return (int)Math.round(Math.pow(goldenRatio, N)/ Math.sqrt(5));
-}
-```
-
-算法分析
-
-- 时间复杂度：O(1)
-- 空间复杂度：O(1)
-
-
-
 ##### 1128. 等价多米诺骨牌对问题
 
 题目：形式上，dominoes[i] = [a, b] 和 dominoes[j] = [c, d] 等价的前提是 a==c 且 b==d，或是 a==d 且 b==c。在 0 <= i < j < dominoes.length 的前提下，找出满足 dominoes[i] 和 dominoes[j] 等价的骨牌对 (i, j) 的数量。
@@ -643,6 +589,67 @@ public int numEquivDominoPairs(int[][] dominoes) {
 - 空间复杂度：O ( 1 )。
 
 
+
+##### 面试题04. 二维数组中的查找
+
+《剑指Offer》题目：在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+思路：
+
+- 暴力法，时间复杂度为O(N*M)；
+- 标志数法，时间复杂度为O(N+M)。
+
+```java
+// 暴力法
+boolean findNumberIn2DArray(int[][] matrix, int target) {
+    if(matrix==null || matrix.length==0 || matrix[0].length==0 ||
+       target < matrix[0][0] || target > matrix[matrix.length-1][matrix[0].length-1]){
+        return false;
+    }
+
+    for(int i=0; i<matrix.length; i++){
+        for(int j=0; j<matrix[i].length; j++){
+            if(matrix[i][j]==target){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+```
+
+**标志数法**：暴力法的时间复杂度为O(N*M)。若二维矩阵行、列均是无序、无规律可循，只能采用暴力法。题目假定了二维数组每一行、每一列均是递增。因此，巧妙地利用此规律，才能实现降低算法复杂度。
+
+以左下角的元素为标志数，其有如下特点：
+
+1. 标志数等于目标值时，直接返回true；
+
+2. 标志数大于目标值时，目标值一定在标志数所在行的上面某一行之中；
+
+3. 标志数小于目标值时，目标值一定在标志数所在列的右边某一列之中。
+
+因此，结合标志数，每一次比较则可消去一行或者一列，使算法复杂度为O(M+N)。
+
+```java
+// 标志数法
+boolean findNumberIn2DArray(int[][] matrix, int target) {
+    if(matrix==null || matrix.length==0 || matrix[0].length==0 ||
+       target < matrix[0][0] || target > matrix[matrix.length-1][matrix[0].length-1]){
+        return false;
+    }
+    
+    int row = matrix.length-1;
+    int column = 0;
+    int flag;
+    for(; row >= 0 && column < matrix[0].length; ){
+        flag = matrix[row][column];
+        if(flag == target) return true;
+        else if(flag > target) row--;
+        else column++;
+    }
+    return false;
+}
+```
 
 
 
@@ -923,7 +930,75 @@ public boolean isPalindrome(ListNode head) {
 
 
 
+##### 面试题22. 链表中倒数第k个节点【双指针】
 
+题目：输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
+
+思路：快慢指针，快指针比慢指针先走k步，随后一起走，直至快指针为null，返回慢指针指向的结点即可。
+
+```java
+public ListNode getKthFromEnd(ListNode head, int k) {
+    if(head==null){
+        return null;
+    }
+
+    // 双指针法，后指针比前指针先走k步，待后指针为null，
+    // 前指针则在第k个结点
+    ListNode slow = head;
+    ListNode fast = head;
+    for(int i=1; i<=k; i++){
+        fast = fast.next;
+    }
+    while(fast!=null){
+        fast = fast.next;
+        slow = slow.next;
+    }
+    return slow;
+}
+```
+
+算法总结：
+
+- 时间复杂度，O(m)，m为链表长度
+- 空间复杂度，O(1)
+
+
+
+##### 19. 删除链表的倒数第N个节点【双指针】
+
+题目：给定一个链表，删除链表的倒数第 *n* 个节点，并且返回链表的头结点。
+
+```java
+public ListNode removeNthFromEnd(ListNode head, int n) {
+    // 奇淫技巧之哑结点
+    // 哑结点是创造的辅助结点，其next指针指向head结点。它的作用在于：在极端情况下，
+    // 比如链表只有一个结点，或删除头结点时，提供辅助。
+    ListNode dummy = new ListNode();
+    dummy.next = head;
+
+    ListNode first = dummy, second = dummy;
+    // 从哑结点出发，first指针比second指针先走n+1步
+    for(int i=1; i<=n+1; i++){
+        first = first.next;
+    }
+
+    // first指针为null时，second指针恰好指向倒数第n+1个结点
+    while(first!=null){
+        first = first.next;
+        second = second.next;
+    }
+
+    // 移除倒数第n个结点
+    ListNode nNode = second.next;
+    second.next = nNode.next;
+    return dummy.next;
+}
+```
+
+算法总结：
+
+- 时间复杂度，O(m)，m为链表长度
+- 空间复杂度，O(1)
 
 
 
@@ -931,7 +1006,7 @@ public boolean isPalindrome(ListNode head) {
 
 ##### 11. 盛最多水的容器
 
-> 暂未彻底理解下述算法
+动态规划思想
 
 ```java
 public int maxArea(int[] height) {
@@ -1020,7 +1095,52 @@ public void moveZeroes(int[] nums) {
 
 
 
-### 6. 树
+### 6. 二叉树
+
+##### 938. 二叉搜索树的范围和
+
+题目要求：给定L和R，返回二叉搜索树中元素值位于L和R之间（包括L和R）的所有结点的值的和
+
+我的思路：
+
+- 中序遍历二叉树，即实现按照值升序遍历二叉树；
+- 为减少左子树不必要的递归，在递归时设置条件，只有当前结点值大于L时，才能递归进入左子树；
+- 同样设置条件，避免右子树不必要的递归。
+
+我的解答：（通过）
+
+```java
+package LeetCode.Recursion;
+public class RangeSumBST {
+    
+    private int sum = 0; // 用于保存结果
+	
+	public int rangeSumBST(TreeNode root, int L, int R) {
+		
+        if(root==null) {
+        	return 0;
+        }
+        
+        if(root.left!=null && root.val > L) {
+        	 // 左子结点不为空，且父结点值大于L时，方可递归进入下一层
+        	rangeSumBST(root.left, L, R);
+        }
+        
+        if(root.val>=L && root.val<=R){
+            sum += root.val;
+        }
+        
+        if(root.right!=null && root.val < R) {
+        	// 右子结点不为空，且父结点值小于R时，方可递归进入下一层
+        	rangeSumBST(root.right, L, R);
+        }
+        
+        return sum;
+    }
+}
+```
+
+
 
 ##### 538 & 1038 将二叉搜索树转变为累加数
 
@@ -1057,11 +1177,7 @@ private void traverseAndUpdate(TreeNode root){
 - 时间复杂度：O(n)
 - 空间复杂度：O(n)，压栈时的空间开销
 
-
-
-
-
-
+---
 
 ### 7. 数学与位运算
 
@@ -1508,7 +1624,7 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 
 
 
-### 11. 回溯算法【难点题，须反复揣摩】
+### 11. 回溯算法
 
 ##### 22. 括号生成
 
@@ -1806,3 +1922,60 @@ public int mySqrt(int x) {
 
 - 时间复杂度为：O(log n)，二分法的时间复杂度是对数级别的
 - 空间复杂度为：O(1)
+
+
+
+### 13. 约瑟夫环问题
+
+题目：《剑指Offer》面试题62之圆圈中最后剩下的数字，0,1,,n-1这n个数字排成一个圆圈，从数字0开始，每次从这个圆圈里删除第m个数字。求出这个圆圈里剩下的最后一个数字。
+
+例如，0、1、2、3、4这5个数字组成一个圆圈，从数字0开始每次删除第3个数字，则删除的前4个数字依次是2、0、4、1，因此最后剩下的数字是3。
+
+思路：经典的约瑟夫环问题。推导出的递推公式如下图所示。
+
+![](LeetCode题解/约瑟夫环问题.jpg)
+
+```java
+// v1.0，环形链表解法的时间复杂度为：O(NM)，空间复杂度为：O(1)。时间性能较差！
+public int lastRemaining(int n, int m) {
+    // 环形链表辅助
+    LinkedList<Integer> list = new LinkedList<>();
+    for(int i=0; i<n; i++){
+        list.add(i);
+    }
+    int index = 0; // 待删除元素索引
+    while(list.size() > 1){
+        for(int k=1; k<m; k++){
+            index = (index+1) % list.size(); // 定位至待删除元素
+        }
+        list.remove(index);
+    }
+    return list.get(0);
+}
+```
+
+```java
+// v2.0，递归解法的时间复杂度为：O(N)，空间复杂度为：O(N)。
+public int lastRemaining(int n, int m) {
+    // 约瑟夫环，递归解法
+    int[] dp = new int[n+1];
+    dp[1] = 0; // 边界
+    for(int i=2; i<=n; i++){
+        dp[i] = (dp[i-1] + m) % i;
+    }
+    return dp[n];
+}
+```
+
+```java
+// v3.0，优化后的递归解法的时间复杂度为：O(N)，空间复杂度为：O(1)。
+public int lastRemaining(int n, int m) {
+    // 使用单个变量保存上一个状态，而非用数组保存全部状态
+    int target = 0; // n==1时
+    for(int i=2; i<=n; i++){
+        target = (target + m) % i;
+    }
+    return target;
+}
+```
+
