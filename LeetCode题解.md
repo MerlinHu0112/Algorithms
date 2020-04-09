@@ -1210,6 +1210,8 @@ public int reverse(int x) {
 
 （1）位运算
 
+**方法一：n & 1**
+
 ```java
 public int hammingWeight(int n) {
     // 利用1与参数n的二进制位上每一位做"&"运算。当结果为1时，即
@@ -1225,6 +1227,28 @@ public int hammingWeight(int n) {
     return count;
 }
 ```
+
+**方法二：n & (n-1)**
+
+思路：
+
+- `n-1` 表示的是，将整数 `n` 的最右边的 `1` 置为 `0`，其右边的其余位均为 `0` 。
+- `n & (n-1) ` 实现了将整数 `n` 从最右边的 `1` 开始、将其后的每一位置为 `0` 。当将 `n` 的所有 `1` 的位均按此操作置为 `0` 后，整数 `n==0`。
+
+![](LeetCode题解\232-2.jpg)
+
+```java
+public int hammingWeight(int n) {
+    int count = 0;
+    while(n!=0){
+        count++;
+        n = (n & (n-1));
+    }
+    return count;
+}
+```
+
+
 
 （2）Java库函数
 
@@ -1242,8 +1266,27 @@ public int hammingWeight(int n) {
 
 算法总结：
 
-- 方法一的时间复杂度为：O(n)【LeetCode官方题解认为是 O(1)】；方法二的时间复杂度为：O(1)。
-- 空间复杂度均为：O(1)。
+- 时间复杂度为：O(1)。整数 `n` 位为 `1` 的个数最多为31。
+- 空间复杂度为：O(1)。
+
+
+
+##### 232. 2的幂
+
+题目：给定一个整数，判断其是否是2的幂。
+
+思路：一个整数若为2的幂，一定有**最高位是1，其余位是0**，那么一定有 `n & (n-1) == 0` 成立。
+
+```java
+public boolean isPowerOfTwo(int n) {
+	return n>0 && (n & (n-1))==0;
+}
+```
+
+算法总结：
+
+- 时间复杂度为：O(1)。
+- 空间复杂度为：O(1)。
 
 
 
