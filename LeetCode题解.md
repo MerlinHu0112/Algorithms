@@ -653,6 +653,37 @@ boolean findNumberIn2DArray(int[][] matrix, int target) {
 
 
 
+##### 面试题21. 调整数组顺序使奇数位于偶数前面
+
+题目：使数组中的奇数位于左端、偶数位于右端，顺序不限。
+
+思路：参考快排
+
+```java
+public int[] exchange(int[] nums) {
+    if(nums==null || nums.length==0){
+        return nums;
+    } 
+    // 基于快排的思想，使用left、right指针分别从首尾开始遍历。
+    int left = 0, right = nums.length - 1;
+    while(left < right){
+        while(nums[left] % 2 == 1 && left < right)
+            left++; // left指针先找到最左端的偶数
+        while(nums[right] % 2 == 0 && left < right)
+            right--; // right指针先找到最右端的奇数
+        // 左端偶数和右端奇数互换
+        if(left < right){
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+        }
+    }
+    return nums;
+}
+```
+
+
+
 ### 4. 链表
 
 ##### 21. 合并两个有序链表
@@ -1199,6 +1230,84 @@ public int reverse(int x) {
         return 0;
     }
     return (int)res; // 强制类型转换      
+}
+```
+
+
+
+##### 50. 实现pow(double x, int n)
+
+题目：自行实现函数pow(double x, int n)。
+
+思路：
+
+- 暴力法：时间复杂度为O(N)，空间复杂度为O(1)。
+- **基于递归的快速幂算法**：时间复杂度为O(log N)，空间复杂度为O(log N)。
+- **基于位运算的快速幂算法**：时间复杂度为O(log N)，空间复杂度为O(1)。
+
+（1）基于递归的快速幂算法
+
+求 `x^n` 可将其分解为下列两种形式：
+
+- n为偶数时，`x^n == x^(n/2)`。
+- n为奇数时，`x^n == (x^(n/2)) * x`。
+
+**通过递归的方式，将大规模的问题逐渐转化为小规模的问题，并求解**。
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        // 循环法的时间复杂度为O(N)。
+        // 参考题解，采用递归的快速幂方法，时间复杂度为O(log N)。
+        long N = n; // 防止n=−2147483648时执行n=-n操作时溢出
+        // 若n为负数，将其转换为正数的幂形式
+        if(N < 0){
+            x = 1/x;
+            N = -N;
+        }
+        return fastPow(x, N);
+    }
+
+    // 递归的快速幂算法
+    private double fastPow(double x, long N){
+        if(N==0) return 1.0;
+        double res = fastPow(x, N/2); // 递归
+        if(N % 2 == 0){
+            return res * res; // N为偶数，返回"res^2"
+        }
+        return res * res * x; // N为奇数，返回"x * res^2"
+    }
+}
+```
+
+（2）基于位运算的快速幂算法
+
+将幂指数 `n` 转化为二进制形式，从最低位开始。若当前位为 `1` ，对结果产生影响，即`res = res * x`，此时 `x` 并非原始的 `x` ，而是在每一次进位时执行 `x = x^2` 后的值。
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        long N = n; // 防止n=−2147483648时执行n=-n操作时溢出
+        // 若n为负数，将其转换为正数的幂形式
+        if(N < 0){
+            x = 1/x;
+            N = -N;
+        }
+        return fastPow(x, N);
+    }
+
+    // 基于位运算的快速幂算法
+    private double fastPow(double x, long N){
+        double res = 1.0D;
+        // 将N转换为二进制，通过i右移和判断i%2的操作，判断每一个二进制位是否为1
+        for(long i=N; i>0; i>>>=1){
+            if(i % 2 == 1){
+                res = res * x;
+            }
+            x = x * x;
+        }
+        return res;
+    }
 }
 ```
 
