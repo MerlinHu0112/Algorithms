@@ -381,6 +381,42 @@ public int fib(int N) {
 
 ### 3. 数组
 
+##### 56. 合并区间【重写比较器】
+
+题目：给出一个区间的集合，请合并所有重叠的区间。
+
+思路：重写比较器，根据二维数组第1列的元素值进行排序（即根据每个区间的左端点值进行排序）。随后不断的用前面区间的右端点值与后面区间的左端点值比较，**若前者不小于后者，说明重复**。
+
+```java
+public int[][] merge(int[][] intervals) {
+
+    List<int[]> res = new ArrayList<>();
+
+    // 对区间按照左端点升序排列
+    Arrays.sort(intervals, new Comparator<int[]>() {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            return o1[0] - o2[0];
+        }
+    });
+
+    for(int i=0; i<intervals.length; i++){
+        int left = intervals[i][0]; // 区间i的左端点值
+        int right = intervals[i][1]; // 区间i的右端点值
+        while(i<intervals.length-1 && right >= intervals[i+1][0]){
+            // 区间i的右端点值不小于区间i+1的左端点值，即两个区间有重合。
+            // 选较大的右端点值，合并两个区间。
+            right = Math.max(right, intervals[++i][1]); // 注意++i
+        }
+        res.add(new int[]{left, right});
+    }
+
+    return res.toArray(new int[0][]);
+}
+```
+
+
+
 ##### 189. 旋转数组【环状替换】
 
 题目：给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
