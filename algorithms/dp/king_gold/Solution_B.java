@@ -10,7 +10,7 @@ public class Solution_B {
 	public static void main(String[] args) {
 	    int[] gold = new int[]{350, 400, 500, 200, 300};
 	    int[] goldPerson = new int[]{3, 5, 5, 3, 4};
-	    System.out.println(getMaxGold(5, 10, gold, goldPerson, new HashMap<Solution_B.KeyObject, Integer>()));
+	    System.out.println(getMaxGold(5, 10, gold, goldPerson, new HashMap<KeyObject, Integer>()));
 	}
 	
 	private static int getMaxGold(int n, int w, int[] g, int[] p, HashMap<KeyObject, Integer> map){

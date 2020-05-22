@@ -26,14 +26,14 @@ public class TestSortUnit {
 		//SortMethod sortMethod = new InsertionSort();
 		//SortMethod sortMethod = new InsertionSortOptimization();
 		//SortMethod sortMethod = new BubbleSort();
-		//SortMethod sortMethod = new ShellSort();
+		SortMethod sortMethod = new ShellSort();
 		//SortMethod sortMethod = new TopDownMergeSort();
 		//SortMethod sortMethod = new QuickMergeSort();
 		//SortMethod sortMethod = new MergeOptimizationA();
 		//SortMethod sortMethod = new MergeOptimizationB();
 		//SortMethod sortMethod = new QuickSort();
 		//SortMethod sortMethod = new QuickSortToInsertionOptimization();
-		SortMethod sortMethod = new QuickSortThreeSamplingOptimization();
+		//SortMethod sortMethod = new QuickSortThreeSamplingOptimization();
 		
 		// 调用
 		sortAndPrint(sortMethod, array);

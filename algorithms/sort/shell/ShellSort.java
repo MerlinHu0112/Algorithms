@@ -14,17 +14,32 @@ public class ShellSort implements SortMethod {
 	public void sort(Integer[] array) {
 		int len = array.length;
 		int h = 1;
-		while (h < len/3) {
-			h = 3*h + 1; // 设置间隔h的递增序列为1，4，13，40，121，...
-		}
-		while (h>=1) {
-			for (int i = h;i<len;i++) {
-				for (int j = i;j>=h && SortUtil.less(array[j],array[j-h]);j-=h) {
-					SortUtil.exch(array, j, j-h);
-				}
+		while(h < len/3)
+			h = h * 3 + 1; // 设置间隔h的递增序列为1，4，13，40，121，...
+		while(h >= 1){
+			for(int i = h; i<len; i++){
+				int temp = array[i];
+				int j = i;
+				for(; j >= h && temp < array[j-h]; j-=h)
+					array[j] = array[j-h]; // 较大元素向右移动，减少交换次数
+				array[j] = temp;
 			}
-			h = h/3;
+			h /= 3;
 		}
 	}
 	
 }
+
+//	int len = array.length;
+//	int h = 1;
+//		while (h < len/3) {
+//		h = 3*h + 1; // 设置间隔h的递增序列为1，4，13，40，121，...
+//		}
+//		while (h>=1) {
+//		for (int i = h;i<len;i++) {
+//		for (int j = i;j>=h && SortUtil.less(array[j],array[j-h]);j-=h) {
+//		SortUtil.exch(array, j, j-h);
+//		}
+//		}
+//		h = h/3;
+//		}
