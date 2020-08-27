@@ -1265,38 +1265,16 @@ class Solution {
 
 
 
-##### 191. 位1的个数
+##### 191. 位1的个数【Brian Kernighan 算法】
 
 题目：统计一个整数二进制表达式中位1的个数。【汉明重量】
 
-（1）位运算
-
-**方法一：n & 1**
-
-```java
-public int hammingWeight(int n) {
-    // 利用1与参数n的二进制位上每一位做"&"运算。当结果为1时，即
-    // 当前位为1，count++；当结果为0时，无操作。随后移动至下一位进行
-    // 与操作
-    int count = 0; // 计数器
-    for(int i=0; i<32; i++){
-        if((n & 1)==1){
-            count++;
-        }
-        n >>>= 1; // 无符号右移一位，避免负数在右移时符号位填充最高位，导致count多1
-    }
-    return count;
-}
-```
-
-**方法二：n & (n-1)**
-
-思路：
+Brian Kernighan 算法思路：
 
 - `n-1` 表示的是，将整数 `n` 的最右边的 `1` 置为 `0`，其右边的其余位均为 `0` 。
 - `n & (n-1) ` 实现了将整数 `n` 从最右边的 `1` 开始、将其后的每一位置为 `0` 。当将 `n` 的所有 `1` 的位均按此操作置为 `0` 后，整数 `n==0`。
 
-![](LeetCode题解\232-2.jpg)
+![](LeetCode题解\191-1.jpg)
 
 ```java
 public int hammingWeight(int n) {
@@ -1309,26 +1287,7 @@ public int hammingWeight(int n) {
 }
 ```
 
-
-
-（2）Java库函数
-
-```java
-public int hammingWeight(int n) {
-    // Integer类的bitCount(n)方法的源码，此方法正是用来实现统计二进制中1的个数
-    n = n - ((n >>> 1) & 0x55555555);
-    n = (n & 0x33333333) + ((n >>> 2) & 0x33333333);
-    n = (n + (n >>> 4)) & 0x0f0f0f0f;
-    n = n + (n >>> 8);
-    n = n + (n >>> 16);
-    return n & 0x3f;
-}
-```
-
-算法总结：
-
-- 时间复杂度为：O(1)。整数 `n` 位为 `1` 的个数最多为31。
-- 空间复杂度为：O(1)。
+>Brian Kernighan 算法的应用还有：201. 数字范围按位与，461. 汉明距离。
 
 
 
@@ -1425,6 +1384,10 @@ public int getSum(int a, int b) {
     return a;
 }
 ```
+
+
+
+
 
 
 
@@ -1717,10 +1680,11 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 - 时间复杂度：O(n)
 - 空间复杂度：O(n)
 
-==与 DFS / BFS 相关的LeetCode题目==
-
-- 101、判断一个二叉树是否是镜像对称的【递归（DFS）+迭代（BFS）】
-- 108、将有序数组转换成平衡二叉树【DFS】
+> 与 DFS / BFS 相关的 LeetCode 题目
+>
+> - 101. 判断一个二叉树是否是镜像对称的【递归（DFS）+迭代（BFS）】
+> - 108. 将有序数组转换成平衡二叉树【DFS】
+> - 109. 有序链表转换二叉搜索树【类似于108题】
 
 
 
